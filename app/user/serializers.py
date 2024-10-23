@@ -9,7 +9,7 @@ class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = get_user_model()
-        fields = ['student_id', 'email', 'password', 'name', 'description']
+        fields = ['id', 'student_id', 'email', 'password', 'name', 'description']
         extra_kwargs = {'password': {'write_only': True, 'min_length': 5}}
     
     def validate_student_id(self, value):
@@ -20,7 +20,7 @@ class UserSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         return get_user_model().objects.create_user(**validated_data)
     
-    def create(self, instance, validated_data):
+    def update(self, instance, validated_data):
         password = validated_data.pop('password', None)
         user = super().update(instance, validated_data)
 
