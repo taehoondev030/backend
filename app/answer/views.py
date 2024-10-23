@@ -6,6 +6,7 @@ from rest_framework import viewsets, status
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
+from rest_framework.decorators import action
 
 from core.models import Answer
 from answer import serializers
@@ -42,3 +43,10 @@ class AnswerViewSet(viewsets.ModelViewSet):
         answer_obj.save()
 
         return Response({"message": "Answers saved successfully."}, status=status.HTTP_201_CREATED)
+
+    @action(detail=False, methods=['get'], url_path='all-answers')
+    def get_all_answers(self, request):
+        """Retrieve all users' answers"""
+        all_answers = Answer.objects.all()  # 모든 유저의 답안 가져오기
+        serializer = self.get_serializer(all_answers, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
