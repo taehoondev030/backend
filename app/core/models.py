@@ -9,26 +9,34 @@ from django.contrib.auth.models import (
     PermissionsMixin,
 )
 
-# Create your models here.
-
 class UserManager(BaseUserManager):
 
     def create_user(self, email, password=None, **extra_fields):
+        """Create and save a user with the given email and password."""
         if not email:
             raise ValueError('User must have an email address')
-        user = self.model(email=self.normalize_email(email), **extra_fields)
+        
+        # 이름과 학번 등을 처리하는 부분
+        name = extra_fields.pop('name', None)
+        student_id = extra_fields.pop('student_id', None)
+        
+        user = self.model(email=self.normalize_email(email), name=name, student_id=student_id, **extra_fields)
         user.set_password(password)
-        user.save(using=self.db)
+        user.save(using=self._db)
 
         return user
-    
-    def create_superuser(self, email, password):
-        user = self.create_user(email, password)
-        user.is_staff=True
-        user.is_superuser=True
-        user.save(using=self.db)
 
-        return user
+    def create_superuser(self, email, password, **extra_fields):
+        """Create and save a superuser with the given email and password."""
+        extra_fields.setdefault('is_staff', True)
+        extra_fields.setdefault('is_superuser', True)
+
+        if extra_fields.get('is_staff') is not True:
+            raise ValueError('Superuser must have is_staff=True.')
+        if extra_fields.get('is_superuser') is not True:
+            raise ValueError('Superuser must have is_superuser=True.')
+
+        return self.create_user(email, password, **extra_fields)
 
 class User(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(max_length = 255, unique=True)
@@ -43,6 +51,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['name', 'student_id']
 
+# 유저 응답 모델
 class Answer(models.Model):
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL,
@@ -80,7 +89,7 @@ class Match(models.Model):
         # 동일한 사용자에게 중복 신청 방지
         unique_together = ('requester', 'recipient')
 
-# 매칭 그룹과 관련된 모델
+# 매칭 그룹 모델
 class Group(models.Model):
     members = models.ManyToManyField(settings.AUTH_USER_MODEL)
     created_at = models.DateTimeField(auto_now_add = True)

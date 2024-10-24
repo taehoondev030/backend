@@ -7,7 +7,7 @@ from rest_framework.routers import DefaultRouter
 
 from group import views
 
-router = DefaultRouter() #CRUD를 자동으로 생성
+router = DefaultRouter() # CRUD를 자동으로 생성
 router.register('groups', views.GroupViewSet)
 
 app_name = 'group'

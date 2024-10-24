@@ -9,7 +9,7 @@ from django.conf import settings
 
 class GroupSerializer(serializers.ModelSerializer):
     members = serializers.PrimaryKeyRelatedField(
-        many = True,
+        many = True, # 필드가 여러 개의 값을 가질 수 있음
         queryset = get_user_model().objects.all()
     )
 
