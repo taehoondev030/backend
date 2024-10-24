@@ -9,10 +9,9 @@ from django.utils.translation import gettext_lazy as _
 
 from core import models
 
-# Register your models here.
 class UserAdmin(BaseUserAdmin):
     ordering = ['id']
-    list_display = ['id', 'email', 'name']
+    list_display = ['email', 'name']
     fieldsets = (
         (None, {'fields': ('email', 'password')}),
         (
@@ -28,20 +27,20 @@ class UserAdmin(BaseUserAdmin):
         (_('Important dates'), {'fields': ('last_login',)}),
     )
     readonly_fields = ['id', 'last_login']
-    add_fieldsets = (
-        (None, {
-            'classes': ('wide',),
-            'fields': (
-                'email',
-                'password1',
-                'password2',
-                'name',
-                'is_active',
-                'is_staff',
-                'is_superuser',
-            )
-        }),
-    )
+    # add_fieldsets = (
+    #     (None, {
+    #         'classes': ('wide',),
+    #         'fields': (
+    #             'email',
+    #             'password1',
+    #             'password2',
+    #             'name',
+    #             'is_active',
+    #             'is_staff',
+    #             'is_superuser',
+    #         )
+    #     }),
+    # )
 
 class AnswerAdmin(admin.ModelAdmin):
     ordering= ['id']

@@ -53,8 +53,9 @@ class AnswerViewSet(viewsets.ModelViewSet):
 
         # 본인을 제외한 성별이 같은 유저
         same_gender_users = User.objects.filter(gender=user_gender).exclude(id=user.id)
-        # 성별이 같은 유저의 답
+       
+        # 해당 사용자들의 답안 가져오기
         all_answers = Answer.objects.filter(user__in=same_gender_users)
         serializer = self.get_serializer(all_answers, many=True)
-        
+
         return Response(serializer.data, status=status.HTTP_200_OK)

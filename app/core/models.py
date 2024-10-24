@@ -22,8 +22,13 @@ class UserManager(BaseUserManager):
 
         return user
 
-    def create_superuser(self, email, password):
-        user = self.create_user(email, password)
+    def create_superuser(self, email, student_id, name, password):
+        user = self.create_user(
+            email= email,
+            student_id = student_id,
+            password = password,
+            name = name,
+        )
         user.is_staff=True
         user.is_superuser=True
         user.save(using=self.db)
@@ -31,28 +36,41 @@ class UserManager(BaseUserManager):
         return user
 
 class User(AbstractBaseUser, PermissionsMixin):
-    email = models.EmailField(max_length = 255, unique=True)
-    name = models.CharField(max_length = 255)
+    email = models.EmailField(max_length=255, unique=True)
+    name = models.CharField(max_length=255)
     student_id = models.IntegerField(
-        unique = True,
-        validators = [MinValueValidator(100000000), MaxValueValidator(999999999)], # 9자리 숫자로 제한
-        null = False, # 필수 항목
-        default = 200000000
+        unique=True,
+        validators=[MinValueValidator(100000000), MaxValueValidator(999999999)],
+        null=False,
+        default=200000000
     )
-    description = models.CharField(max_length = 255, default="", blank=True)
+    description = models.CharField(max_length=255, default="", blank=True)
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
 
-    # 추가 프로필 정보
-    gender = models.CharField(max_length = 10, choices = [('male', 'Male'), ('female', 'Female')], blank = False, default = 'male')
-    age = models.PositiveIntegerField(null = True, blank = True)
-    grade = models.CharField(max_length = 10, blank = True)
-    major = models.CharField(max_length = 100, blank = True)
+    gender = models.CharField(max_length=10, choices=[('male', 'Male'), ('female', 'Female')], blank=False, default='male')
+    age = models.PositiveIntegerField(null=True, blank=True)
+    grade = models.CharField(max_length=10, blank=True)
+    major = models.CharField(max_length=100, blank=True)
 
     objects = UserManager()
 
-    USERNAME_FIELD = 'student_id' # 학번을 사용자 인증 필드로 사용
-    REQUIRED_FIELDS = ['name', 'email'] # 회원 가입 시 필수 입력 필드
+    USERNAME_FIELD = 'student_id'
+    REQUIRED_FIELDS = ['name', 'email']
+
+    def __str__(self):
+        return f"{self.name} ({self.student_id})"  # 사용자 이름과 학번을 반환
+
+class Answer(models.Model):
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+    )
+    answer = models.JSONField(default=list)
+
+    def __str__(self):
+        return f"User: {self.user.email}, Answer: {self.answer}"  # 사용자 이메일과 답변 내용 반환
+
 
 # 유저 응답 모델
 class Answer(models.Model):
@@ -60,7 +78,7 @@ class Answer(models.Model):
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
     )
-    answer = models.JSONField(default = list)  # 유저의 응답을 딕셔너리로 저장
+    answer = models.JSONField(default = list)  # 유저의 응답을 리스트로 저장
     
     def __str__(self):
         return f"User: {self.user.email}, Answer: {self.answer}"
