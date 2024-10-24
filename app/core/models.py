@@ -8,6 +8,7 @@ from django.contrib.auth.models import (
     BaseUserManager,
     PermissionsMixin,
 )
+from django.core.validators import MinValueValidator, MaxValueValidator
 
 class UserManager(BaseUserManager):
 
@@ -15,41 +16,43 @@ class UserManager(BaseUserManager):
         """Create and save a user with the given email and password."""
         if not email:
             raise ValueError('User must have an email address')
-        
-        # 이름과 학번 등을 처리하는 부분
-        name = extra_fields.pop('name', None)
-        student_id = extra_fields.pop('student_id', None)
-        
-        user = self.model(email=self.normalize_email(email), name=name, student_id=student_id, **extra_fields)
+        user = self.model(email=self.normalize_email(email), **extra_fields)
         user.set_password(password)
-        user.save(using=self._db)
+        user.save(using=self.db)
 
         return user
 
-    def create_superuser(self, email, password, **extra_fields):
-        """Create and save a superuser with the given email and password."""
-        extra_fields.setdefault('is_staff', True)
-        extra_fields.setdefault('is_superuser', True)
+    def create_superuser(self, email, password):
+        user = self.create_user(email, password)
+        user.is_staff=True
+        user.is_superuser=True
+        user.save(using=self.db)
 
-        if extra_fields.get('is_staff') is not True:
-            raise ValueError('Superuser must have is_staff=True.')
-        if extra_fields.get('is_superuser') is not True:
-            raise ValueError('Superuser must have is_superuser=True.')
-
-        return self.create_user(email, password, **extra_fields)
+        return user
 
 class User(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(max_length = 255, unique=True)
     name = models.CharField(max_length = 255)
-    student_id = models.CharField(max_length = 9, unique = True, default="")
-    description = models.CharField(max_length = 255, default="")
+    student_id = models.IntegerField(
+        unique = True,
+        validators = [MinValueValidator(100000000), MaxValueValidator(999999999)], # 9자리 숫자로 제한
+        null = False, # 필수 항목
+        default = 200000000
+    )
+    description = models.CharField(max_length = 255, default="", blank=True)
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
 
+    # 추가 프로필 정보
+    gender = models.CharField(max_length = 10, choices = [('male', 'Male'), ('female', 'Female')], blank = False, default = 'male')
+    age = models.PositiveIntegerField(null = True, blank = True)
+    grade = models.CharField(max_length = 10, blank = True)
+    major = models.CharField(max_length = 100, blank = True)
+
     objects = UserManager()
 
-    USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['name', 'student_id']
+    USERNAME_FIELD = 'student_id' # 학번을 사용자 인증 필드로 사용
+    REQUIRED_FIELDS = ['name', 'email'] # 회원 가입 시 필수 입력 필드
 
 # 유저 응답 모델
 class Answer(models.Model):
@@ -57,7 +60,7 @@ class Answer(models.Model):
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
     )
-    answer = models.JSONField(default = dict)  # 유저의 응답을 딕셔너리로 저장
+    answer = models.JSONField(default = list)  # 유저의 응답을 딕셔너리로 저장
     
     def __str__(self):
         return f"User: {self.user.email}, Answer: {self.answer}"
