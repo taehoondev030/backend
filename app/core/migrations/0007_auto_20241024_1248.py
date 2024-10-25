@@ -26,21 +26,21 @@ class Migration(migrations.Migration):
         #     name='grade',
         #     field=models.CharField(blank=True, max_length=10),
         # ),
-        migrations.AddField(
-            model_name='user',
-            name='major',
-            field=models.CharField(blank=True, max_length=100),
-        ),
-        migrations.AlterField(
-            model_name='answer',
-            name='answer',
-            field=models.JSONField(default=list),
-        ),
-        migrations.AlterField(
-            model_name='user',
-            name='description',
-            field=models.CharField(blank=True, default='', max_length=255),
-        ),
+        # migrations.AddField(
+        #     model_name='user',
+        #     name='major',
+        #     field=models.CharField(blank=True, max_length=100),
+        # ),
+        # migrations.AlterField(
+        #     model_name='answer',
+        #     name='answer',
+        #     field=models.JSONField(default=list),
+        # ),
+        # migrations.AlterField(
+        #     model_name='user',
+        #     name='description',
+        #     field=models.CharField(blank=True, default='', max_length=255),
+        # ),
         migrations.AlterField(
             model_name='user',
             name='student_id',
