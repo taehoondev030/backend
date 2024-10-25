@@ -11,11 +11,11 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.AddField(
-            model_name='user',
-            name='age',
-            field=models.PositiveIntegerField(blank=True, null=True),
-        ),
+        # migrations.AddField(
+        #     model_name='user',
+        #     name='age',
+        #     field=models.PositiveIntegerField(blank=True, null=True),
+        # ),
         migrations.AddField(
             model_name='user',
             name='gender',
