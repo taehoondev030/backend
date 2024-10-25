@@ -27,20 +27,20 @@ class UserAdmin(BaseUserAdmin):
         (_('Important dates'), {'fields': ('last_login',)}),
     )
     readonly_fields = ['id', 'last_login']
-    # add_fieldsets = (
-    #     (None, {
-    #         'classes': ('wide',),
-    #         'fields': (
-    #             'email',
-    #             'password1',
-    #             'password2',
-    #             'name',
-    #             'is_active',
-    #             'is_staff',
-    #             'is_superuser',
-    #         )
-    #     }),
-    # )
+    add_fieldsets = (
+        (None, {
+            'classes': ('wide',),
+            'fields': (
+                'email',
+                'password1',
+                'password2',
+                'name',
+                'is_active',
+                'is_staff',
+                'is_superuser',
+            )
+        }),
+    )
 
 class AnswerAdmin(admin.ModelAdmin):
     ordering= ['id']
@@ -66,7 +66,18 @@ class GroupAdmin(admin.ModelAdmin):
 
     get_members.short_description = 'Group Members'
 
+class ResultAdmin(admin.ModelAdmin):
+    ordering = ['id']
+    list_display = ['id', 'user', 'get_matching_data']
+
+    def get_matching_data(self, obj):
+        # 매칭 결과를 미리보기 형태로 출력
+        return str(obj.matching_data)[:50] + '...'
+
+    get_matching_data.short_description = 'Matching Result Preview'
+
 admin.site.register(models.User, UserAdmin)
 admin.site.register(models.Answer, AnswerAdmin)
 admin.site.register(models.Match, MatchAdmin)
 admin.site.register(models.Group, GroupAdmin)
+admin.site.register(models.Result, ResultAdmin)

@@ -114,3 +114,14 @@ class Match(models.Model):
 class Group(models.Model):
     members = models.ManyToManyField(settings.AUTH_USER_MODEL)
     created_at = models.DateTimeField(auto_now_add = True)
+
+# 매칭 결과 데이터 관련 모델
+class Result(models.Model):
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+    )
+    matching_data = models.JSONField()
+
+    def __str__(self):
+        return f'User {self.user.id} Matching Data'

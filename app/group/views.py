@@ -40,15 +40,6 @@ class GroupViewSet(viewsets.ModelViewSet):
         group.save()  # 변경사항 저장
         serializer = self.get_serializer(group)  # 직렬화
         return Response(serializer.data)  # 응답 반환
-        
-    # @action(detail=True, methods=['patch'])
-    # def add_member(self, request, pk=None):
-    #     """Add a member to the group"""
-    #     group = self.get_object()  # 그룹 객체 가져오기
-    #     user = request.user  # 요청한 사용자 가져오기
-    #     group.members.add(user)  # 사용자 추가
-    #     group.save()  # 저장
-    #     return Response({"message": "User added to the group successfully."}, status=status.HTTP_200_OK)
 
     # 그룹에서 탈퇴 시
     @action(detail=True, methods=['post'], url_path='leave')

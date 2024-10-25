@@ -33,4 +33,5 @@ urlpatterns = [
     path('api/answer/', include('answer.urls')),
     path('api/group/', include('group.urls')),
     path('api/match/', include('match.urls')),
+    path('api/result/', include('result.urls')),
 ]
