@@ -31,11 +31,11 @@ class Migration(migrations.Migration):
         #     name='major',
         #     field=models.CharField(blank=True, max_length=100),
         # ),
-        # migrations.AlterField(
-        #     model_name='answer',
-        #     name='answer',
-        #     field=models.JSONField(default=list),
-        # ),
+        migrations.AlterField(
+            model_name='answer',
+            name='answer',
+            field=models.JSONField(default=list),
+        ),
         # migrations.AlterField(
         #     model_name='user',
         #     name='description',
