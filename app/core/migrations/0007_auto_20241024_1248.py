@@ -36,11 +36,11 @@ class Migration(migrations.Migration):
             name='answer',
             field=models.JSONField(default=list),
         ),
-        # migrations.AlterField(
-        #     model_name='user',
-        #     name='description',
-        #     field=models.CharField(blank=True, default='', max_length=255),
-        # ),
+        migrations.AlterField(
+            model_name='user',
+            name='description',
+            field=models.CharField(blank=True, default='', max_length=255),
+        ),
         migrations.AlterField(
             model_name='user',
             name='student_id',
