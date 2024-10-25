@@ -21,11 +21,11 @@ class Migration(migrations.Migration):
         #     name='gender',
         #     field=models.CharField(choices=[('male', 'Male'), ('female', 'Female')], default='male', max_length=10),
         # ),
-        migrations.AddField(
-            model_name='user',
-            name='grade',
-            field=models.CharField(blank=True, max_length=10),
-        ),
+        # migrations.AddField(
+        #     model_name='user',
+        #     name='grade',
+        #     field=models.CharField(blank=True, max_length=10),
+        # ),
         migrations.AddField(
             model_name='user',
             name='major',
