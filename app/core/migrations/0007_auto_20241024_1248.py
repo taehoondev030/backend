@@ -16,11 +16,11 @@ class Migration(migrations.Migration):
         #     name='age',
         #     field=models.PositiveIntegerField(blank=True, null=True),
         # ),
-        migrations.AddField(
-            model_name='user',
-            name='gender',
-            field=models.CharField(choices=[('male', 'Male'), ('female', 'Female')], default='male', max_length=10),
-        ),
+        # migrations.AddField(
+        #     model_name='user',
+        #     name='gender',
+        #     field=models.CharField(choices=[('male', 'Male'), ('female', 'Female')], default='male', max_length=10),
+        # ),
         migrations.AddField(
             model_name='user',
             name='grade',
