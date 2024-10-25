@@ -31,14 +31,14 @@ class AnswerViewSet(viewsets.ModelViewSet):
         """Create or update user's answers"""
         # print(request.data)  # 들어오는 데이터 확인
         user = request.user
-        answers_data = request.data.get('answers', [])
+        answers_data = request.data.get('responses', [])
 
         if not answers_data:  # 빈 데이터 체크
             return Response({"message": "No answers provided."}, status=status.HTTP_400_BAD_REQUEST)
 
         # 기존 응답이 있는 경우 업데이트, 없으면 새로 생성
         answer_obj, created = Answer.objects.get_or_create(user=user)
-        answer_obj.answer = answers_data
+        answer_obj.responses = answers_data
         answer_obj.save()
 
         return Response({"message": "Answers saved successfully."}, status=status.HTTP_201_CREATED)

@@ -61,27 +61,16 @@ class User(AbstractBaseUser, PermissionsMixin):
     def __str__(self):
         return f"{self.name} ({self.student_id})"  # 사용자 이름과 학번을 반환
 
-class Answer(models.Model):
-    user = models.ForeignKey(
-        settings.AUTH_USER_MODEL,
-        on_delete=models.CASCADE,
-    )
-    answer = models.JSONField(default=list)
-
-    def __str__(self):
-        return f"User: {self.user.email}, Answer: {self.answer}"  # 사용자 이메일과 답변 내용 반환
-
-
 # 유저 응답 모델
 class Answer(models.Model):
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
     )
-    answer = models.JSONField(default = list)  # 유저의 응답을 리스트로 저장
+    responses = models.JSONField(default = list)  # 유저의 응답을 리스트로 저장
     
     def __str__(self):
-        return f"User: {self.user.email}, Answer: {self.answer}"
+        return f"User: {self.user.email}, Responses: {self.responses}"
 
 # 룸메이트 신청 모델
 class Match(models.Model):
