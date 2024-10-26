@@ -36,30 +36,35 @@ class UserManager(BaseUserManager):
         return user
 
 class User(AbstractBaseUser, PermissionsMixin):
-    email = models.EmailField(max_length=255, unique=True)
-    name = models.CharField(max_length=255)
-    student_id = models.IntegerField(
-        unique=True,
-        validators=[MinValueValidator(100000000), MaxValueValidator(999999999)],
-        null=False,
-        default=200000000
-    )
-    description = models.CharField(max_length=255, default="", blank=True)
+    email = models.EmailField(max_length=100, unique=True)
+    name = models.CharField(max_length=50)
+    phone_number = models.CharField(max_length=20, default='010-0000-0000')
+    birthday = models.DateField(default='2000-01-01')
+    room_capacity = models.IntegerField(default=2)
+    gender = models.CharField(max_length=10, choices=[('male', 'Male'), ('female', 'Female')], blank=False, default='male')
+    nickname = models.CharField(max_length=20, default='가대생')
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
 
-    gender = models.CharField(max_length=10, choices=[('male', 'Male'), ('female', 'Female')], blank=False, default='male')
-    age = models.PositiveIntegerField(null=True, blank=True)
-    grade = models.CharField(max_length=10, blank=True)
-    major = models.CharField(max_length=100, blank=True)
+    # student_id = models.IntegerField(
+    #     unique=True,
+    #     validators=[MinValueValidator(    100000000), MaxValueValidator(999999999)],
+    #     null=False,
+    #     default=200000000
+    # )
+    # description = models.CharField(max_length=255, default="", blank=True)
+    
+    # age = models.PositiveIntegerField(null=True, blank=True)
+    # grade = models.CharField(max_length=10, blank=True)
+    # major = models.CharField(max_length=100, blank=True)
 
     objects = UserManager()
 
-    USERNAME_FIELD = 'student_id'
-    REQUIRED_FIELDS = ['name', 'email']
+    USERNAME_FIELD = 'email'
+    # REQUIRED_FIELDS = ['name', 'email']
 
     def __str__(self):
-        return f"{self.name} ({self.student_id})"  # 사용자 이름과 학번을 반환
+        return f"{self.name} ({self.email})"  # 사용자 이름과 학번을 반환
 
 # 유저 응답 모델
 class Answer(models.Model):
@@ -111,6 +116,6 @@ class Result(models.Model):
         on_delete=models.CASCADE,
     )
     matching_data = models.JSONField()
-
+    
     def __str__(self):
         return f'User {self.user.id} Matching Data'

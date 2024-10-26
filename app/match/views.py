@@ -134,6 +134,6 @@ class MatchViewSet(viewsets.ModelViewSet):
         match_request.save()
         
         #기록 삭제
-        match_request.delete()
+        # match_request.delete()
 
         return Response({"message": "Match request rejected and deleted."}, status=status.HTTP_200_OK)
